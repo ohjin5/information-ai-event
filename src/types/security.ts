@@ -11,6 +11,7 @@ export type PropTopicKey =
 export interface PropConfig {
   key: PropTopicKey;
   displayName: string;
+  qrCodeString: string; // e.g. "SECURITY_ITEM:medical_record"
   icon: string;
   iconName: string;
   question: string;
@@ -20,11 +21,13 @@ export interface PropConfig {
   failureAnswer: string;
 }
 
+export type DetectionSource = 'QR' | 'GEMINI_VISION' | 'OPERATOR_SIMULATOR';
+
 export type AppPhase = 
   | 'IDLE'            // Initial standby screen
-  | 'SCANNING'        // Webcam active, AI scanning for prop board
-  | 'RECOGNIZED'      // Board detected: "✓ DETECTED - 의무기록"
-  | 'QUESTIONING'     // AI speaking the question
+  | 'SCANNING'        // Webcam active, searching QR code first, then fallback to Gemini Vision
+  | 'RECOGNIZED'      // Item detected (QR or Gemini Vision): "✓ DETECTED - USB"
+  | 'QUESTIONING'     // AI speaking question TTS
   | 'LISTENING'       // Microphone listening to participant's spoken answer
   | 'EVALUATING'      // AI checking user's answer
   | 'RESULT_PASS'     // Full screen PASS success celebration

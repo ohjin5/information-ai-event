@@ -4,15 +4,16 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
   medical_record: {
     key: "medical_record",
     displayName: "의무기록",
+    qrCodeString: "SECURITY_ITEM:medical_record",
     icon: "📋",
     iconName: "FileText",
     question: "의무기록을 다룰 때 조심해야 하는 점 한 가지를 말씀해주세요.",
     passCriteria: [
       "업무상 필요한 경우에만 조회",
       "호기심이나 개인적 이유로 조회하지 않음",
-      "환자정보를 타인에게 함부로 전달하지 않음",
-      "환자정보가 노출되지 않도록 관리",
-      "화면을 켜둔 채 자리를 비우지 않음"
+      "환자정보 무단 공유 금지",
+      "환자정보 노출 방지",
+      "화면을 켜놓고 자리를 비우지 않음"
     ],
     coreMessage: "의무기록은 업무 목적 외 조회가 금지되며 환자 정보 노출 방지가 핵심입니다.",
     hint: "이 정보를 지금 꼭 확인해야 하는 업무상 이유가 있는지를 생각해보세요.",
@@ -21,6 +22,7 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
   drm: {
     key: "drm",
     displayName: "DRM",
+    qrCodeString: "SECURITY_ITEM:drm",
     icon: "🔒",
     iconName: "Lock",
     question: "DRM이 적용된 업무자료를 다룰 때 조심해야 하는 점 한 가지를 말씀해주세요.",
@@ -28,7 +30,7 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
       "DRM 임의 해제 금지",
       "업무자료 외부 무단 전송 금지",
       "개인 이메일 / 개인 클라우드 사용 금지",
-      "정식 반출 절차 이용"
+      "공식 반출 절차 이용"
     ],
     coreMessage: "DRM은 무단 외부 유출 방지 장치이므로 임의 해제나 외부 전송을 하면 안 됩니다.",
     hint: "DRM 보안을 임의로 해제하거나 개인 메일, 외부 클라우드로 전송해도 되는지 생각해보세요.",
@@ -37,14 +39,15 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
   usb: {
     key: "usb",
     displayName: "USB",
+    qrCodeString: "SECURITY_ITEM:usb",
     icon: "💾",
     iconName: "Usb",
     question: "출처가 불분명한 USB를 발견했다면 어떻게 해야 할까요?",
     passCriteria: [
       "출처 불분명 USB 연결 금지",
       "승인되지 않은 USB 사용 금지",
-      "정보보호 담당자에게 신고 또는 문의",
-      "중요자료 무단 저장 금지"
+      "보안 담당자에게 신고 또는 문의",
+      "중요자료 임의 저장 금지"
     ],
     coreMessage: "출처를 모르는 USB는 악성코드 감염 위험이 있으므로 PC에 꽂지 말고 신고해야 합니다.",
     hint: "출처를 모르는 USB를 업무 PC에 꽂았을 때 어떤 위험이 생길지 생각해보세요.",
@@ -53,6 +56,7 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
   email: {
     key: "email",
     displayName: "피싱메일",
+    qrCodeString: "SECURITY_ITEM:email",
     icon: "✉️",
     iconName: "MailWarning",
     question: "의심스러운 이메일이나 링크를 받았다면 어떻게 해야 할까요?",
@@ -60,7 +64,7 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
       "의심스러운 링크 클릭 금지",
       "첨부파일 실행 금지",
       "발신자 확인",
-      "정보보호 담당부서 신고",
+      "의심메일 신고",
       "계정정보 입력 금지"
     ],
     coreMessage: "출처가 의심되는 메일의 링크나 첨부파일은 클릭하지 말고 즉시 신고해야 합니다.",
@@ -70,14 +74,15 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
   password: {
     key: "password",
     displayName: "비밀번호",
+    qrCodeString: "SECURITY_ITEM:password",
     icon: "🔑",
     iconName: "KeyRound",
     question: "비밀번호를 안전하게 관리하는 방법 한 가지를 말씀해주세요.",
     passCriteria: [
       "타인과 공유하지 않음",
-      "쉽게 추측 가능한 비밀번호 사용 금지",
-      "동일 비밀번호 반복 사용 금지",
-      "비밀번호 노출 금지 (모니터 부착 등 금지)"
+      "쉬운 비밀번호 사용 금지",
+      "같은 비밀번호 반복 사용 금지",
+      "비밀번호 노출 금지"
     ],
     coreMessage: "비밀번호는 본인만 알고 있어야 하며 모니터 부착이나 타인 공유를 금지해야 합니다.",
     hint: "비밀번호를 다른 사람에게 알려주거나 모니터 옆 포스트잇에 적어두는 것에 대해 생각해보세요.",
@@ -86,11 +91,12 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
   idcard: {
     key: "idcard",
     displayName: "출입증",
+    qrCodeString: "SECURITY_ITEM:idcard",
     icon: "🪪",
     iconName: "IdCard",
     question: "출입증을 사용할 때 지켜야 하는 보안수칙 한 가지를 말씀해주세요.",
     passCriteria: [
-      "타인에게 빌려주지 않음",
+      "타인 대여 금지",
       "분실 즉시 신고",
       "권한 없는 사람 동반 출입 금지"
     ],
@@ -101,12 +107,13 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
   print: {
     key: "print",
     displayName: "출력물",
+    qrCodeString: "SECURITY_ITEM:print",
     icon: "🖨️",
     iconName: "Printer",
     question: "개인정보가 포함된 출력물을 어떻게 관리해야 할까요?",
     passCriteria: [
       "개인정보 출력물 방치 금지",
-      "안전하게 파기 (세쇄기/파쇄함)",
+      "안전하게 파기",
       "일반 쓰레기통 폐기 금지",
       "타인이 볼 수 있는 곳에 두지 않음"
     ],
@@ -117,11 +124,12 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
   pc: {
     key: "pc",
     displayName: "PC 보안",
+    qrCodeString: "SECURITY_ITEM:pc",
     icon: "💻",
     iconName: "MonitorCheck",
     question: "업무 중 자리를 비울 때 PC에서 해야 하는 행동은 무엇일까요?",
     passCriteria: [
-      "화면 잠금 (Win + L)",
+      "화면 잠금",
       "로그아웃",
       "업무화면 노출 방지"
     ],
@@ -133,7 +141,28 @@ export const PROP_TOPICS: Record<PropTopicKey, PropConfig> = {
 
 export const PROP_TOPIC_KEYS = Object.keys(PROP_TOPICS) as PropTopicKey[];
 
-// Configurable constants for camera vision detection
-export const CONFIDENCE_THRESHOLD = 0.80; // Minimum confidence to accept frame candidate
-export const REQUIRED_CONSECUTIVE_FRAMES = 2; // Must detect same topic twice in a row
-export const SCAN_INTERVAL_MS = 1500; // Frame capture interval (1.5 seconds)
+// Helper to match QR code string format (e.g. "SECURITY_ITEM:medical_record")
+export const parseQrCodeString = (rawQr: string): PropTopicKey | null => {
+  if (!rawQr || typeof rawQr !== 'string') return null;
+  const clean = rawQr.trim();
+
+  for (const key of PROP_TOPIC_KEYS) {
+    if (clean === PROP_TOPICS[key].qrCodeString) {
+      return key;
+    }
+  }
+
+  // Fallback: If rawQr contains topic key or name
+  if (clean.includes('SECURITY_ITEM:')) {
+    const parts = clean.split('SECURITY_ITEM:');
+    if (parts[1] && PROP_TOPICS[parts[1] as PropTopicKey]) {
+      return parts[1] as PropTopicKey;
+    }
+  }
+
+  return null;
+};
+
+export const CONFIDENCE_THRESHOLD = 0.80;
+export const REQUIRED_CONSECUTIVE_FRAMES = 2;
+export const SCAN_INTERVAL_MS = 1500;

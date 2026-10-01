@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { AppPhase, PropTopicKey } from '../types/security';
+import { AppPhase, PropTopicKey, DetectionSource } from '../types/security';
 import { PROP_TOPICS, PROP_TOPIC_KEYS } from '../data/topics';
-import { Settings, RotateCcw, Camera, Mic, Volume2, Maximize, X, Sparkles, Shield } from 'lucide-react';
+import { Settings, RotateCcw, Camera, Mic, Volume2, Maximize, X, Sparkles, Shield, QrCode } from 'lucide-react';
 
 interface OperatorMenuProps {
   phase: AppPhase;
   currentTopicKey: PropTopicKey | null;
+  detectionSource: DetectionSource | null;
   ttsEnabled: boolean;
   onToggleTTS: () => void;
   onForceReset: () => void;
@@ -15,6 +16,7 @@ interface OperatorMenuProps {
 export const OperatorMenu: React.FC<OperatorMenuProps> = ({
   phase,
   currentTopicKey,
+  detectionSource,
   ttsEnabled,
   onToggleTTS,
   onForceReset,
@@ -33,10 +35,10 @@ export const OperatorMenu: React.FC<OperatorMenuProps> = ({
   return (
     <>
       {/* Discrete Bottom Right Button */}
-      <div className="fixed bottom-4 right-4 z-40 select-none opacity-40 hover:opacity-100 transition-opacity">
+      <div className="fixed bottom-3 right-3 z-40 select-none opacity-30 hover:opacity-100 transition-opacity pb-[env(safe-area-inset-bottom)]">
         <button
           onClick={() => setOpen(true)}
-          className="p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white shadow-xl flex items-center space-x-2 text-xs font-bold"
+          className="p-2.5 rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white shadow-xl flex items-center space-x-1.5 text-xs font-bold"
           title="운영자 메뉴"
         >
           <Settings className="w-4 h-4" />
@@ -47,10 +49,10 @@ export const OperatorMenu: React.FC<OperatorMenuProps> = ({
       {/* Operator Drawer Modal */}
       {open && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 select-none animate-fade-in">
-          <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden">
+          <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden max-h-[90dvh] flex flex-col">
             
             {/* Header */}
-            <div className="p-5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+            <div className="p-4 sm:p-5 bg-slate-950 border-b border-slate-800 flex items-center justify-between shrink-0">
               <div className="flex items-center space-x-3">
                 <div className="p-2 rounded-xl bg-blue-500/20 text-blue-400">
                   <Shield className="w-5 h-5" />
@@ -70,24 +72,35 @@ export const OperatorMenu: React.FC<OperatorMenuProps> = ({
             </div>
 
             {/* Content */}
-            <div className="p-6 space-y-6 text-xs text-slate-300">
+            <div className="p-5 space-y-5 text-xs text-slate-300 overflow-y-auto">
               
               {/* Current Status Monitor */}
-              <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
-                <div className="text-slate-400 font-bold">현재 AI 진행 상태:</div>
+              <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1.5">
+                <div className="text-slate-400 font-bold flex justify-between">
+                  <span>현재 AI 진행 상태:</span>
+                  <span className="text-cyan-300 font-mono text-[10px]">
+                    {detectionSource ? `인식 출처: ${detectionSource}` : ''}
+                  </span>
+                </div>
                 <div className="text-sm font-black text-cyan-400">
                   ● {phase} {currentTopicKey ? `(${PROP_TOPICS[currentTopicKey]?.displayName})` : ''}
                 </div>
+                {currentTopicKey && (
+                  <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1 pt-1 border-t border-slate-900">
+                    <QrCode className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>QR 코드 값: {PROP_TOPICS[currentTopicKey]?.qrCodeString}</span>
+                  </div>
+                )}
               </div>
 
               {/* Quick Action Grid */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2.5">
                 <button
                   onClick={() => {
                     onForceReset();
                     setOpen(false);
                   }}
-                  className="p-4 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 font-bold flex items-center space-x-2 hover:bg-rose-500/30 transition-all text-left"
+                  className="p-3.5 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 font-bold flex items-center space-x-2 hover:bg-rose-500/30 transition-all text-left"
                 >
                   <RotateCcw className="w-5 h-5 shrink-0" />
                   <div>
@@ -98,18 +111,18 @@ export const OperatorMenu: React.FC<OperatorMenuProps> = ({
 
                 <button
                   onClick={toggleFullscreen}
-                  className="p-4 rounded-2xl bg-slate-800 border border-slate-700 text-white font-bold flex items-center space-x-2 hover:bg-slate-750 transition-all text-left"
+                  className="p-3.5 rounded-2xl bg-slate-800 border border-slate-700 text-white font-bold flex items-center space-x-2 hover:bg-slate-750 transition-all text-left"
                 >
                   <Maximize className="w-5 h-5 shrink-0" />
                   <div>
                     <div className="text-xs font-black">전체화면 토글</div>
-                    <div className="text-[10px] text-slate-400">16:9 TV 모드 실행</div>
+                    <div className="text-[10px] text-slate-400">TV/디스플레이 전체화면</div>
                   </div>
                 </button>
 
                 <button
                   onClick={onToggleTTS}
-                  className="p-4 rounded-2xl bg-slate-800 border border-slate-700 text-white font-bold flex items-center space-x-2 hover:bg-slate-750 transition-all text-left"
+                  className="p-3.5 rounded-2xl bg-slate-800 border border-slate-700 text-white font-bold flex items-center space-x-2 hover:bg-slate-750 transition-all text-left"
                 >
                   <Volume2 className="w-5 h-5 shrink-0" />
                   <div>
@@ -120,21 +133,21 @@ export const OperatorMenu: React.FC<OperatorMenuProps> = ({
 
                 <button
                   onClick={() => window.location.reload()}
-                  className="p-4 rounded-2xl bg-slate-800 border border-slate-700 text-white font-bold flex items-center space-x-2 hover:bg-slate-750 transition-all text-left"
+                  className="p-3.5 rounded-2xl bg-slate-800 border border-slate-700 text-white font-bold flex items-center space-x-2 hover:bg-slate-750 transition-all text-left"
                 >
                   <Camera className="w-5 h-5 shrink-0" />
                   <div>
-                    <div className="text-xs font-black">장치 재연결</div>
-                    <div className="text-[10px] text-slate-400">웹캠/마이크 새로고침</div>
+                    <div className="text-xs font-black">장치 새로고침</div>
+                    <div className="text-[10px] text-slate-400">웹캠/마이크 재연결</div>
                   </div>
                 </button>
               </div>
 
-              {/* Operator Prop Simulator (Emergency Test) */}
+              {/* Emergency Prop Simulator */}
               <div className="space-y-2 pt-2 border-t border-slate-800">
                 <div className="text-xs font-bold text-slate-400 flex items-center gap-1">
                   <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  비상 소품 테스트 (웹캠 대신 소품 강제 인식):
+                  비상 소품 테스트 (웹캠 대신 소품 강제 선택):
                 </div>
 
                 <div className="grid grid-cols-4 gap-2">
@@ -149,7 +162,7 @@ export const OperatorMenu: React.FC<OperatorMenuProps> = ({
                         }}
                         className="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-center transition-all"
                       >
-                        <div className="text-lg">{prop.icon}</div>
+                        <div className="text-base">{prop.icon}</div>
                         <div className="text-[10px] font-bold text-slate-300 truncate">
                           {prop.displayName}
                         </div>

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { AppPhase, PropTopicKey, AnswerEvalResult } from './types/security';
-import { PROP_TOPICS } from './data/topics';
+import { AppPhase, PropTopicKey, AnswerEvalResult, DetectionSource } from './types/security';
 import { KioskHeader } from './components/KioskHeader';
 import { KioskIdle } from './components/KioskIdle';
 import { KioskCameraScanner } from './components/KioskCameraScanner';
 import { KioskQuestionSpeech } from './components/KioskQuestionSpeech';
 import { KioskResultView } from './components/KioskResultView';
 import { OperatorMenu } from './components/OperatorMenu';
-import { playSoundEffect, speakText } from './utils/audio';
+import { playSoundEffect } from './utils/audio';
 
 export default function App() {
   const [phase, setPhase] = useState<AppPhase>('IDLE');
   const [currentTopicKey, setCurrentTopicKey] = useState<PropTopicKey | null>(null);
+  const [detectionSource, setDetectionSource] = useState<DetectionSource | null>(null);
   const [evalResult, setEvalResult] = useState<AnswerEvalResult | null>(null);
   const [userAnswerText, setUserAnswerText] = useState<string>('');
   const [retryCount, setRetryCount] = useState<number>(0);
@@ -23,16 +23,18 @@ export default function App() {
     playSoundEffect('click');
     setPhase('SCANNING');
     setCurrentTopicKey(null);
+    setDetectionSource(null);
     setEvalResult(null);
     setUserAnswerText('');
     setRetryCount(0);
     setCameraErrorMsg(null);
   };
 
-  // PROP DETECTED BY CAMERA VISION
-  const handlePropDetected = (topicKey: PropTopicKey) => {
+  // PROP DETECTED (BY QR OR GEMINI VISION)
+  const handlePropDetected = (topicKey: PropTopicKey, source: DetectionSource) => {
     playSoundEffect('fanfare');
     setCurrentTopicKey(topicKey);
+    setDetectionSource(source);
     setPhase('RECOGNIZED');
   };
 
@@ -68,6 +70,7 @@ export default function App() {
     playSoundEffect('click');
     setPhase('IDLE');
     setCurrentTopicKey(null);
+    setDetectionSource(null);
     setEvalResult(null);
     setUserAnswerText('');
     setRetryCount(0);
@@ -78,13 +81,14 @@ export default function App() {
   const handleOperatorSimulateProp = (key: PropTopicKey) => {
     playSoundEffect('click');
     setCurrentTopicKey(key);
+    setDetectionSource('OPERATOR_SIMULATOR');
     setPhase('RECOGNIZED');
   };
 
   return (
-    <div className="w-screen h-screen bg-slate-950 text-slate-100 flex flex-col font-sans select-none overflow-hidden">
+    <div className="w-screen h-[100dvh] bg-slate-950 text-slate-100 flex flex-col font-sans select-none overflow-hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
       
-      {/* 16:9 TV Kiosk Header */}
+      {/* Kiosk Header */}
       <KioskHeader
         phase={phase}
         ttsEnabled={ttsEnabled}
@@ -106,13 +110,12 @@ export default function App() {
           <KioskIdle onStart={handleStartChallenge} />
         )}
 
-        {/* Phase 2: SCANNING WEBCAM STAGE */}
+        {/* Phase 2: SCANNING WEBCAM STAGE (QR + GEMINI VISION) */}
         {phase === 'SCANNING' && (
           <KioskCameraScanner
             onPropDetected={handlePropDetected}
             onCameraError={(err) => setCameraErrorMsg(err)}
             ttsEnabled={ttsEnabled}
-            onSpeakNotice={(msg) => speakText(msg, ttsEnabled)}
           />
         )}
 
@@ -144,6 +147,7 @@ export default function App() {
       <OperatorMenu
         phase={phase}
         currentTopicKey={currentTopicKey}
+        detectionSource={detectionSource}
         ttsEnabled={ttsEnabled}
         onToggleTTS={() => setTtsEnabled(prev => !prev)}
         onForceReset={handleNextParticipant}
