@@ -1,0 +1,8 @@
+{
+  "name": "병원 정보보호주간 AI Security Challenge",
+  "description": "행사장 소품 QR코드로 참여하는 병원 정보보호주간 AI 보안 챌린지 및 스탬프 투어",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
